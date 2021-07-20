@@ -26,7 +26,6 @@ commonmark==0.9.1
 configparser==5.0.2
 cookiecutter==1.6.0
 cryptography==2.9.2
-cupshelpers==1.0
 dateparser==0.7.6
 defer==1.0.6
 distro-info===0.18ubuntu0.18.04.1
