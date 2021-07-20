@@ -12,7 +12,6 @@ black==21.5b2
 boto==2.49.0
 boto3==1.14.42
 botocore==1.17.42
-Brlapi==0.6.6
 CacheControl==0.12.6
 cachematic==0.0.2
 cachetools==4.2.2
