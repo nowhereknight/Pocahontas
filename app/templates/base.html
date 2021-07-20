@@ -2,6 +2,7 @@
 {% extends 'bootstrap/base.html' %}
 
 {% block title %}
+    <meta charset="utf-8" />
     {% if title %}{{ title }} - Atticus{% else %}Bienvenido a Atticus{% endif %}
 {% endblock %}
 
@@ -20,6 +21,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url_for('index') }}">Hogar</a></li>
+                    <li><a href="{{ url_for('render_graph') }}">Gráfica de barras</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_anonymous %}

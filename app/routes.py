@@ -1,3 +1,6 @@
+import io
+import base64
+
 from app import app, db, logging
 from app.models import User, Enterprise, Value
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, EnterpriseForm
@@ -5,6 +8,14 @@ from flask import render_template, flash, redirect, request, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 from datetime import datetime
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import json
+import plotly
+import plotly.express as px
 
 
 @app.before_request
@@ -82,7 +93,7 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash("Congratulations, you are now a registered user!")
+        flash("Felicidades. Ya has sido registrado")
         return redirect(url_for("login"))
     return render_template("register.html", title="Register", form=form)
 
@@ -107,9 +118,55 @@ def edit_profile():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
         db.session.commit()
-        flash("Your changes have been saved.")
+        flash("Tus cambios han sido guardados")
         return redirect(url_for("edit_profile"))
     elif request.method == "GET":
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
     return render_template("edit_profile.html", title="Edit Profile", form=form)
+
+
+@app.route('/render_graph')
+@login_required
+def render_graph():
+    # Fixing random state for reproducibility
+    np.random.seed(19680801)
+
+
+    plt.rcdefaults()
+    fig, ax = plt.subplots()
+
+    # Example data
+    enterprises = Enterprise.query.all()
+    app.logger.error(enterprises)
+    values_dict = {}
+    for enterprise in enterprises:
+        for value in enterprise.values:
+            if value.name in values_dict:
+                values_dict[value.name]+=1
+            else:
+                values_dict[value.name]=1
+    values_list=[]
+    count_list=[]
+    for key in values_dict:
+        values_list.append(key)
+        count_list.append(values_dict[key])
+    y_pos = np.arange(len(values_list))
+
+    ax.barh(y_pos, count_list, align='center')
+    ax.set_yticks(y_pos)
+    ax.set_yticklabels(values_list)
+    ax.invert_yaxis()  # labels read top-to-bottom
+    ax.set_xlabel('Incidencias')
+    ax.set_title('Valores repetidos')
+    
+    # Convert plot to PNG image
+    pngImage = io.BytesIO()
+    FigureCanvas(fig).print_png(pngImage)
+    
+    # Encode PNG image to base64 string
+    pngImageB64String = "data:image/png;base64,"
+    pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
+    
+    return render_template("chart.html", image=pngImageB64String)
+
