@@ -8,9 +8,8 @@ import uuid
 
 
 class GUID(TypeDecorator):
-    """Platform-independent GUID type.
-    Uses PostgreSQL's UUID type, otherwise uses
-    CHAR(32), storing as stringified hex values.
+    """Valor de GUID personalizado
+    Usa el tipo de dato UUID de PostgreSQL o CHAR(32) en su defecto
     """
 
     impl = CHAR
@@ -48,6 +47,7 @@ def load_user(id):
 
 
 class User(UserMixin, db.Model):
+    """Modelo para tabla Usuario"""
     __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
@@ -64,12 +64,29 @@ class User(UserMixin, db.Model):
            return (self.user_id)
     
     def set_password(self, password):
+        """No se guarda directamente la contraseña del usuario sino el hash
+
+        :param password: Contraseña sin encriptar
+        :type password: str
+        """
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
+        """Se valida que los hashes sean los mismos
+
+        :param password: Contraseña sin encriptar
+        :type password: str
+        :return: Validación
+        :rtype: Bool
+        """
         return check_password_hash(self.password_hash, password)
 
     def get_all_enterprises(self):
+        """Retorna todas las empresas creadas por el usuario
+
+        :return: empresas ordenadas de más nueva a más vieja
+        :rtype: lista de instancias de Enterprise
+        """
         all_enterprises = Enterprise.query.order_by(Enterprise.timestamp.desc())
         return all_enterprises
 
@@ -82,6 +99,7 @@ values_enterprises = db.Table(
 
 
 class Value(db.Model):
+    """Modelo de tabla values. Para no chocar con la palabra reservada de SQL value se cambia el nombre de la tabla"""
     __tablename__ = 'values_table'
     value_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True, unique=True)
@@ -94,6 +112,7 @@ class Value(db.Model):
            return (self.value_id)
 
 class Enterprise(db.Model):
+    """Modelo de la tabla enterprises"""
     __tablename__ = 'enterprises'
     enterprise_id = db.Column(GUID(), primary_key=True, default=lambda: str(uuid.uuid4()))
     name = db.Column(db.String(64), index=True, unique=True)

@@ -1,12 +1,31 @@
-# Mulan
+# Pocahontas
 
-Aplicación web basada en Flask diseñada para registrar, actualizar y eliminar registros de empresas que cotizan en la bolsa de valores de New York (o NYSE para sonar más fancy). Está nombrada gracias a mi amada gatita Mulán. Algunos dirán que también está nombrada por mi princesa favorita de Disney, pero eso es una coincidencia hasta que se demuestre lo contrario.
+Aplicación web basada en Flask diseñada para registrar, actualizar y eliminar registros de empresas que cotizan en la bolsa de valores de New York (o NYSE para sonar más fancy). Está nombrada gracias a la princesa nativo-americana Pocahontas.
 
+Este proyecto se hizo en coordinación de la aplicación web. Mientras que en Mulán es posible insertar, editar y eliminar registros, en Pocahontas es posible verlos de una forma más amigable incluyendo una gráfica de barras
 
 Credit where credit is due, esta aplicación no habría sido remotamente posible sin el apoyo del [Flask Mega-Tutorial series](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world) de Miguel Grinberg
 
 #### Beneficios de usar Flask
-
+- Despacho de solicitudes RESTful.
+- Utiliza un motor de plantillas Ninja2.
+- Soporte para cookies seguras (sesiones del lado del cliente).
+- Amplia documentación.
+- Compatibilidad del motor de aplicaciones de Google.
+- Las API tienen una forma agradable y son coherentes
+- Fácilmente implementable en producción
+- Mayor compatibilidad con las últimas tecnologías
+- Experimentación técnica
+- Más fácil de usar para casos simples
+- El tamaño de la base de código es relativamente más pequeño
+- Alta escalabilidad para aplicaciones simples,
+- Fácil de construir un prototipo rápido
+- Enrutar la URL es fácil
+- Aplicaciones fáciles de desarrollar y mantener
+- La integración de la base de datos es fácil
+- Núcleo pequeño y fácilmente extensible
+- Plataforma mínima pero potente
+- Muchos recursos disponibles en línea, especialmente en GitHub
 
 #### Estructura del Proyecto
 - /Mulan - Directorio principal. Pero eso ya lo sabían.
@@ -25,13 +44,13 @@ Credit where credit is due, esta aplicación no habría sido remotamente posible
         - tests.py Tests que pueden ser ejecutados directamente por la terminal
 
 ### Estructura de la BD
-![](atticus-db.png)
+![](mulan-db.png)
 
 ### Deployeo local
 
 Lo primero que se debe hacer es clonar el siguente repositorio. Asumiendo que ya está clonado, ingresamos a la carpeta, inicializamos un entorno virtual e instalamos todo lo especificado en requirements
 ```
-$ cd Mulan
+$ cd Pocahontas
 $ python3 -m venv venv
 $ source venv/bin/activate
 (venv) $ pip install -r requirements.txt
@@ -74,6 +93,11 @@ Una vez se termina de usar el entorno virtual es posible salir usando el comando
 ```
 (venv) $ deactivate
 ```
+
+### Diagrama del sistema
+El diagrama del sistema es bastante sencillo. Se trata de dos instancias web independientes de Heroku conectadas a una instancia de base de datos de RDS. Se observa que al compartir Mulán y Pocahontas la misma BD, los usuarios son los mismos
+![](sistema.png)
+
 ### Pruebas en la Base de Datos
 El servidor de base de datos en común está montado en RDS y es públicamente accesible (No la mejor estrategia de seguridad. Lo admito. Pero para esta etapa de desarrollo y pruebas servirá). Pueden acceder por medio de este comando recordando que la abse de datos se llama `flask_database`
 ```
@@ -85,3 +109,7 @@ La contraseña es `12QwAsZx`
 
 ### Flask Docummentation
 [Documentación de Flask](https://flask.palletsprojects.com/en/2.0.x/)
+
+### Tareas pendientes
+- Agregar gráficas más significativas
+- Desplegar el número total de usuarios

@@ -29,6 +29,12 @@ def before_request():
 @app.route("/index", methods=["GET", "POST"])
 @login_required
 def index():
+    def index():
+    """Función que maneja la lógica del despliegue de páginas y la paginación de las mismas
+
+    :return: Redireccionamiento a pagina principal
+    :rtype: None
+    """
     form = EnterpriseForm()
     if form.validate_on_submit():
         enterprise = Enterprise(
@@ -61,6 +67,11 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """Función que direcciona a formulario que valida identidad del usuario
+
+    :return: Redireccionamiento a página principal
+    :rtype: None
+    """
     if current_user.is_authenticated:
         return redirect(url_for("index"))
     form = LoginForm()
@@ -85,6 +96,12 @@ def logout():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """Función que permite direccionar a la página de registro de usuarios y
+        manejar la lógica de las peticiones
+
+    :return: redireccionamiento a página de registro
+    :rtype: None
+    """
     if current_user.is_authenticated:
         return redirect(url_for("index"))
     form = RegistrationForm()
@@ -108,10 +125,11 @@ def user(username):
 @app.route("/edit_profile", methods=["GET", "POST"])
 @login_required
 def edit_profile():
-    """[summary]
+    """Función que permite redireccionar a página de edición de perfiles de usuarios
+        y manejar la lógica de las peticiones
 
-    :return: [description]
-    :rtype: [type]
+    :return: redireccionamiento a página de edición de perfiles
+    :rtype: None
     """
     form = EditProfileForm(current_user.username)
     if form.validate_on_submit():
@@ -129,14 +147,16 @@ def edit_profile():
 @app.route('/render_graph')
 @login_required
 def render_graph():
-    # Fixing random state for reproducibility
-    np.random.seed(19680801)
+    """ Fución que recaba información de empresas y sus valores, la limpia, grafica y renderiza
 
+    :return: Redireccionamiento a gráfica
+    :rtype: None
+    """
+    np.random.seed(19680801)
 
     plt.rcdefaults()
     fig, ax = plt.subplots()
 
-    # Example data
     enterprises = Enterprise.query.all()
     app.logger.error(enterprises)
     values_dict = {}
@@ -160,11 +180,11 @@ def render_graph():
     ax.set_xlabel('Incidencias')
     ax.set_title('Valores repetidos')
     
-    # Convert plot to PNG image
+    # Convertir a imagen
     pngImage = io.BytesIO()
     FigureCanvas(fig).print_png(pngImage)
     
-    # Encode PNG image to base64 string
+    # Pasar imagen PNG a una cadena base64
     pngImageB64String = "data:image/png;base64,"
     pngImageB64String += base64.b64encode(pngImage.getvalue()).decode('utf8')
     
